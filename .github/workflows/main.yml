@@ -1,15 +1,18 @@
-on: [push]
+# This is an example of using Composite Run Steps Actions
+
+name: Composite Example
+
+on: [workflow_dispatch]
 
 jobs:
-  hello_world_job:
+  copy_files_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: A job that copy files
     steps:
-      - uses: actions/checkout@v2
-      - id: foo
-        uses: actions/hello-world-composite-action@refs/heads/main
-        with:
-          who-to-greet: 'Mona the Octocat'
-      - run: echo random-number ${{ steps.foo.outputs.random-number }}
-        shell: bash
-      
+    - uses: actions/checkout@v2
+    - id: myCompositeAction
+      uses: krishrocks1904/hello-world-composite-action@v1 
+      with:
+        destinationFolder: '/whatever/folder'
+    - run: echo Files copied ${{ steps.myCompositeAction.outputs.copied-files }} 
+      shell: bash
