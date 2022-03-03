@@ -1,23 +1,21 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'File Copy'
+description: 'Pretends to copy some files and return the number of files copied'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  destinationFolder:  # path
+    description: 'The folder to copy the files to'
     required: true
-    default: 'World'
+    default: '~'
 outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+  copied-files: 
+    description: "Number of files copied"
+    value: ${{ steps.random-number-generator.outputs.filesNo }}
 runs:
   using: "composite"
-  steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
+  steps: 
+    - run: ${{ github.action_path }}/ExecuteSomething.sh
       shell: bash
     - id: random-number-generator
-      run: echo "::set-output name=random-id::$(echo $RANDOM)"
+      run: echo "::set-output name=filesNo::$(echo $RANDOM)"
       shell: bash
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash          
-    - run: goodbye.sh
+    - run: ${{ github.action_path }}/CopyFiles.sh
       shell: bash
