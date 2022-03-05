@@ -5,14 +5,22 @@ name: Composite Example
 on: [workflow_dispatch]
 
 jobs:
-  copy_files_job:
+  function_app_build:
     runs-on: ubuntu-latest
-    name: A job that copy files
+    name: function app build
     steps:
     - uses: actions/checkout@v2
-    - id: myCompositeAction
-      uses: krishrocks1904/hello-world-composite-action@v1 
+    - id: function_app_build
+      uses: krishrocks1904/azure-function-deplo-99@v1 
       with:
-        destinationFolder: '/whatever/folder'
-    - run: echo Files copied ${{ steps.myCompositeAction.outputs.copied-files }} 
-      shell: bash
+        environment_name: 'dev01'
+        azure_tenant_id: 'azure subscription id '
+        azure_subscription_id: 'azure subscription id '
+        client_id:  'service principal client id '
+        client_secret: 'service principal client id '
+        resource_group_name: 'resource_group_name '
+        function_app_name: 'function_app_name '
+        LOCATION_ABBREVIATION: 'uks'
+        source_directory: './'
+        DOTNET_VERSION:  '6.0'
+   
