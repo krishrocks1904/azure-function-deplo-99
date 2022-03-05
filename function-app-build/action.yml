@@ -42,28 +42,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: Checkout GitHub Action
-        uses: actions/checkout@master
-
-      - name: Login via Az module
-        id: login
-        uses: azure/login@v1
-        with:
-          creds: '{"clientId":"${{ inputs.client_id }}","clientSecret":"${{ inputs.client_secret }}","subscriptionId":"${{ inputs.azure_subscription_id }}","tenantId":"${{ inputs.azure_tenant_id }}"}'
-          enable-AzPSSession: true
-
-      - name: Get Publishing Profile
-        id: getpublishingprofile
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |
-            $profile = Get-AzWebAppPublishingProfile `
-                -ResourceGroupName ${{ inputs.resource_group_name }} `
-                -Name ${{ inputs.function_app_name }} 
-            $profile = $profile.Replace("`r", "").Replace("`n", "")
-            Write-Output "::set-output name=profile::$profile"
-          azPSVersion: latest
-
       - name: Setup DotNet ${{ inputs.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v1
         with:
