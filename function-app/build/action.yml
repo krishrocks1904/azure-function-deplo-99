@@ -1,0 +1,33 @@
+name: Function App Build
+description: 'build azure function code'   
+  
+inputs:
+  source_directory:  # path
+    description: 'source code directory'
+    required: true
+    default: './'
+  DOTNET_VERSION:  # path
+    description: 'version of dotnet'
+    required: true
+    default: '6.0'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup DotNet ${{ inputs.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ inputs.DOTNET_VERSION }}
+
+    - name: Build with dotnet
+      shell: bash
+      run: dotnet build --configuration Release --output ./output
+      working-directory: ${{inputs.source_directory}}
+   
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: function-app
+        path: ${{inputs.source_directory}}/output
