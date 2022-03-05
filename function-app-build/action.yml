@@ -42,21 +42,21 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: Setup DotNet ${{ inputs.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ inputs.DOTNET_VERSION }}
+    - name: Setup DotNet ${{ inputs.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ inputs.DOTNET_VERSION }}
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-        working-directory: ${{inputs.source_directory}}
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+      working-directory: ${{inputs.source_directory}}
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
-        working-directory: ${{inputs.source_directory}}
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
+      working-directory: ${{inputs.source_directory}}
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: function-app
-          path: ${{inputs.source_directory}}/drop
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: function-app
+        path: ${{inputs.source_directory}}/drop
