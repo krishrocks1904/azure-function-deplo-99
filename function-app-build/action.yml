@@ -52,8 +52,8 @@ runs:
         working-directory: ${{inputs.source_directory}}
 
       - name: dotnet publish
-          run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
-          working-directory: ${{inputs.source_directory}}
+        run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
+        working-directory: ${{inputs.source_directory}}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
