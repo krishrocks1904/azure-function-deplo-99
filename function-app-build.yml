@@ -1,0 +1,89 @@
+name: Function App Build
+description: 'build azure function code'   
+
+  
+inputs:
+  environment_name: 
+    description: 'name of the azure environment'
+    required: true
+    default: 'dev01'
+    
+   azure_tenant_id:  
+     description: 'azure subscription id '
+     required: true
+   azure_subscription_id:
+     description: 'azure subscription id '
+     required: true
+   client_id:  
+     description: 'service principal client id '
+     required: true
+   client_secret: 
+     description: 'service principal client id '
+     required: true
+  
+  resource_group_name: 
+    description: 'resource_group_name '
+    required: true
+
+  function_app_name: 
+    description: 'function_app_name '
+    required: true
+
+  LOCATION_ABBREVIATION:  # path
+    description: 'location'
+    required: true
+    default: 'uks'
+
+  source_directory:  # path
+    description: 'source code directory'
+    required: true
+    default: './'
+
+  DOTNET_VERSION:  # path
+    description: 'version of dotnet'
+    required: true
+    default: '6.0'
+
+outputs:
+  copied-files: 
+    description: "Number of files copied"
+    value: ${{ steps.random-number-generator.outputs.filesNo }}
+
+runs:
+  using: "composite"
+  steps:
+      - name: Checkout GitHub Action
+        uses: actions/checkout@master
+
+      - name: Login via Az module
+        id: login
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ github.event.inputs.client_id }}","clientSecret":"${{ github.event.inputs.client_secret }}","subscriptionId":"${{  github.event.inputs.azure_subscription_id }}","tenantId":"${{  github.event.inputs.azure_tenant_id }}"}'
+          enable-AzPSSession: true
+
+      - name: Get Publishing Profile
+        id: getpublishingprofile
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            $profile = Get-AzWebAppPublishingProfile `
+                -ResourceGroupName ${{ github.event.inputs.resource_group_name }} `
+                -Name ${{ github.event.inputs.function_app_name }} 
+            $profile = $profile.Replace("`r", "").Replace("`n", "")
+            Write-Output "::set-output name=profile::$profile"
+          azPSVersion: latest
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Resolve Project Dependencies Using Dotnet
+        shell: pwsh
+        run: |
+          pushd '.\${{ github.event.inputs.source_directory }}'
+          dotnet build --configuration Release --output ./output
+          popd
+
+     
