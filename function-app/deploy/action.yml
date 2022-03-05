@@ -54,7 +54,7 @@ runs:
                 -Name ${{ inputs.function_app_name }} 
             $profile = $profile.Replace("`r", "").Replace("`n", "")
             Write-Output "::set-output name=profile::$profile"
-          azPSVersion: latest
+        azPSVersion: latest
           
     - name: deploy az-function
       uses: Azure/functions-action@v1.3.2
