@@ -20,25 +20,20 @@ inputs:
   client_secret: 
     description: 'service principal client id '
     required: true
-  
   resource_group_name: 
     description: 'resource_group_name '
     required: true
-
   function_app_name: 
     description: 'function_app_name '
     required: true
-
   LOCATION_ABBREVIATION:  # path
     description: 'location'
     required: true
     default: 'uks'
-
   source_directory:  # path
     description: 'source code directory'
     required: true
     default: './'
-
   DOTNET_VERSION:  # path
     description: 'version of dotnet'
     required: true
@@ -69,14 +64,21 @@ runs:
             Write-Output "::set-output name=profile::$profile"
           azPSVersion: latest
 
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      - name: Setup DotNet ${{ inputs.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ inputs.DOTNET_VERSION }}
 
-      - name: Resolve Project Dependencies Using Dotnet
-        shell: pwsh
-        run: |
-          pushd '.\${{ inputs.source_directory }}'
-          dotnet build --configuration Release --output ./output
-          popd
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+        working-directory: ${{inputs.source_directory}}
+
+      - name: dotnet publish
+          run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
+          working-directory: ${{inputs.source_directory}}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: function-app
+          path: ${{inputs.source_directory}}/drop
