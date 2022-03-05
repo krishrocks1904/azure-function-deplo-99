@@ -61,5 +61,5 @@ runs:
       id: functionsaction
       with:
           app-name: ${{ inputs.function_app_name }} 
-          package: './output'          
-          publish-profile: ${{inputs.source_directory}}
+          package: '${{inputs.source_directory}}/src'          
+          publish-profile: ${{ steps.getpublishingprofile.outputs.profile }}
