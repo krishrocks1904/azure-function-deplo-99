@@ -2,7 +2,11 @@
 
 name: function-app-deployment
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
   ROOT_PATH: './azure-function/azure-function'     
