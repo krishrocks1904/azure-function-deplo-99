@@ -23,6 +23,6 @@ jobs:
         resource_group_name: 'demo-rg'
         function_app_name: 'function-demo-001'
         LOCATION_ABBREVIATION: 'uks'
-        source_directory: 'azure-function/azure-function/**'
+        source_directory: './azure-function/azure-function/**'
         DOTNET_VERSION:  '6.0'
    
