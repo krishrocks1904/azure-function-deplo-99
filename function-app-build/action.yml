@@ -50,10 +50,12 @@ runs:
         dotnet-version: ${{ inputs.DOTNET_VERSION }}
 
     - name: Build with dotnet
+      shell: pwsh
       run: dotnet build --configuration Release
       working-directory: ${{inputs.source_directory}}
 
     - name: dotnet publish
+      shell: pwsh
       run: dotnet publish -c Release -o ${{inputs.source_directory}}/drop
       working-directory: ${{inputs.source_directory}}
 
