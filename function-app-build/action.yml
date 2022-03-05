@@ -44,11 +44,6 @@ inputs:
     required: true
     default: '6.0'
 
-outputs:
-  copied-files: 
-    description: "Number of files copied"
-    value: ${{ steps.random-number-generator.outputs.filesNo }}
-
 runs:
   using: "composite"
   steps:
@@ -59,7 +54,7 @@ runs:
         id: login
         uses: azure/login@v1
         with:
-          creds: '{"clientId":"${{ github.event.inputs.client_id }}","clientSecret":"${{ github.event.inputs.client_secret }}","subscriptionId":"${{  github.event.inputs.azure_subscription_id }}","tenantId":"${{  github.event.inputs.azure_tenant_id }}"}'
+          creds: '{"clientId":"${{ inputs.client_id }}","clientSecret":"${{ inputs.client_secret }}","subscriptionId":"${{ inputs.azure_subscription_id }}","tenantId":"${{ inputs.azure_tenant_id }}"}'
           enable-AzPSSession: true
 
       - name: Get Publishing Profile
@@ -68,8 +63,8 @@ runs:
         with:
           inlineScript: |
             $profile = Get-AzWebAppPublishingProfile `
-                -ResourceGroupName ${{ github.event.inputs.resource_group_name }} `
-                -Name ${{ github.event.inputs.function_app_name }} 
+                -ResourceGroupName ${{ inputs.resource_group_name }} `
+                -Name ${{ inputs.function_app_name }} 
             $profile = $profile.Replace("`r", "").Replace("`n", "")
             Write-Output "::set-output name=profile::$profile"
           azPSVersion: latest
@@ -82,6 +77,6 @@ runs:
       - name: Resolve Project Dependencies Using Dotnet
         shell: pwsh
         run: |
-          pushd '.\${{ github.event.inputs.source_directory }}'
+          pushd '.\${{ inputs.source_directory }}'
           dotnet build --configuration Release --output ./output
           popd
