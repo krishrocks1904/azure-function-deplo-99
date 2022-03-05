@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v2
     
     - id: function_app_build
-      uses: krishrocks1904/azure-function-deplo-99/function-app-build@fv9
+      uses: krishrocks1904/azure-function-deplo-99/function-app-build@fv10
       with:
         environment_name: 'dev01'
         azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
