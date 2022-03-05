@@ -8,18 +8,18 @@ inputs:
     required: true
     default: 'dev01'
     
-   azure_tenant_id:  
-     description: 'azure subscription id '
-     required: true
-   azure_subscription_id:
-     description: 'azure subscription id '
-     required: true
-   client_id:  
-     description: 'service principal client id '
-     required: true
-   client_secret: 
-     description: 'service principal client id '
-     required: true
+  azure_tenant_id:  
+    description: 'azure subscription id '
+    required: true
+  azure_subscription_id:
+    description: 'azure subscription id '
+    required: true
+  client_id:  
+    description: 'service principal client id '
+    required: true
+  client_secret: 
+    description: 'service principal client id '
+    required: true
   
   resource_group_name: 
     description: 'resource_group_name '
