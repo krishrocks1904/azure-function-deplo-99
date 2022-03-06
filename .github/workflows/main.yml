@@ -2,16 +2,26 @@
 
 name: function-app-deployment
 
+env:
+  ROOT_PATH: './azure-function/azure-function'     
+  DOTNET_VERSION: '6.0.x'
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+  workflow_call:
+    inputs: 
+      ENVIRONMENT_NAME:
+        description: 'Environment Name'
+        type: string
+        required: true
+        default: 'dev01'
+    secrets:
+      AZURE_AD_CLIENT_ID_${{ inputs.ENVIRONMENT_NAME }}: 
+        required: true
 
-env:
-  ROOT_PATH: './azure-function/azure-function'     
-  DOTNET_VERSION: '6.0.x'
-  ENVIRONMENT_NAME: 'DEV01'
   
 jobs:
   build:
@@ -28,7 +38,7 @@ jobs:
         DOTNET_VERSION:  ${{ env.DOTNET_VERSION }}
    
   deploy_dev:
-    name: dev
+    name: DEPLOY_DEV
     runs-on: ubuntu-latest
     needs: [build]
     environment:
