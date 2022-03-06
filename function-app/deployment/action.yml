@@ -1,0 +1,76 @@
+# This is an example of using Composite Run Steps Actions
+
+name: function-app-deployment
+
+inputs:
+  environment_name:  
+    description: 'environment_name'
+    required: true
+    default: 'dev01'
+  source_directory:  
+    description: 'source code directory'
+    required: true
+    default: './'
+  dotnet_version:  
+    description: 'version of dotnet'
+    required: true
+    default: '6.0'
+  azure_tenant_id:  
+    description: 'azure tenant_id'
+    required: true
+    default: '6.0'
+  azure_subscriptionId:  
+    description: 'azure subscriptionid'
+    required: true
+    default: '6.0'
+  azure_client_id:  
+    description: 'azure service principal client id'
+    required: true
+    default: '6.0'
+  azure_client_secret:  
+    description: 'azure service principal client secret'
+    required: true
+  function_resource_group_name:  
+    description: 'function resource group name'
+    required: true
+  function_app_name:  
+    description: 'function app name'
+    required: true
+
+runs:
+  using: "composite"
+  
+  jobs:
+    build_${{ inputs.environment_name }}:
+      runs-on: ubuntu-latest
+      name: function app build
+      
+      steps:
+      - uses: actions/checkout@v2
+      
+      - id: function_app_build
+        uses: krishrocks1904/azure-function-deplo-99/function-app/build@fv13
+        with:
+          source_directory: ${{ inputs.source_directory }}
+          DOTNET_VERSION:  ${{ inputs.dotnet_version }}
+     
+    deploy__${{ inputs.environment_name }}:
+      name: deploy__${{ inputs.environment_name }}
+      runs-on: ubuntu-latest
+      needs: [build_${{ inputs.environment_name }}]
+      environment:
+        name: ${{ inputs.environment_name }}
+        #url: ${{ steps.functionsaction.outputs.webapp-url }}
+    
+      steps:
+        - id: function_app_deploy
+          uses: krishrocks1904/azure-function-deplo-99/function-app/deploy@fv13
+          with:
+            azure_tenant_id: ${{ inputs.azure_tenant_id }}
+            azure_subscription_id: ${{ inputs.azure_subscriptionId }}
+            client_id:  ${{ inputs.azure_client_id }}
+            client_secret: ${{ inputs.azure_client_secret }}
+            resource_group_name: ${{ inputs.function_resource_group_name }}
+            function_app_name: ${{ inputs.function_app_name }}
+            source_directory: ${{ inputs.source_directory }}
+            
