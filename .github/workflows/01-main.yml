@@ -46,7 +46,7 @@ jobs:
       #url: ${{ steps.functionsaction.outputs.webapp-url }}
 
     steps:
-      - uses: actions/checkout@v2
+      
       - id: function_app_deploy
         uses: ./function-app/deploy
         with:
