@@ -4,8 +4,11 @@ name: function-app-deployment
 
 env:
   ROOT_PATH: './azure-function/azure-function'     
-  DOTNET_VERSION: '6.0.x'
-
+  DOTNET_VERSION: '6.x.x'
+  LOCATION_ABBREVIATION: 'demo'
+  ENV_SUFFIX: '001'
+  FUNCTION_NAME: 'function-${{ env.LOCATION_ABBREVIATION }}-${{ env.ENV_SUFFIX }}'
+  
 on:
   push:
     branches:
@@ -56,6 +59,6 @@ jobs:
           client_id: ${{ secrets[format('AZURE_CLIENT_ID_{0}', inputs.ENVIRONMENT_NAME )] }}
           client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           resource_group_name: 'demo-rg'
-          function_app_name: 'function-demo-001'
+          function_app_name: ${{ env.RESOURCE_GROUP_NAME }}
           source_directory: ${{ env.ROOT_PATH }}
           
