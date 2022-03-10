@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     environment:
-      name: 'Development'
+      name: ${{ inputs.ENVIRONMENT_NAME }}
       #url: ${{ steps.functionsaction.outputs.webapp-url }}
 
     steps:
