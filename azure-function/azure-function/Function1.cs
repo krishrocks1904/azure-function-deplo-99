@@ -16,7 +16,7 @@ namespace azure_function
 {
     public static class Function1
     {
-        [FunctionName("Function1")]
+        [FunctionName("GetSecret")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -33,7 +33,7 @@ namespace azure_function
                     Delay= TimeSpan.FromSeconds(2),
                     MaxDelay = TimeSpan.FromSeconds(16),
                     MaxRetries = 5,
-                                Mode = RetryMode.Exponential
+                    Mode = RetryMode.Exponential
                  }
             };
             var client = new SecretClient(new Uri(endpoint), credential, options);
